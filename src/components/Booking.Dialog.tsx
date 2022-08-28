@@ -10,25 +10,28 @@ import DialogTitle from '@mui/material/DialogTitle';
 export const FormDialog = (props) => {
     const [open, setOpen] = React.useState(false);
     const [guestName, setGuestName] = React.useState("");
+    const [success, setSuccess] = React.useState(false);
     const handleClickOpen = () => {
         setOpen(true);
     };
 
     const handleClose = async () => {
         setOpen(false);
+        setSuccess(false);
     };
 
     const handleBook = async () => {
-        if(guestName.length===0)alert("Name is required!")
+        //replace this with mui component
+        if (guestName.length === 0) alert("Name is required!")
         else {
             try {
                 await props.handleBooking({...props.data, name: guestName})
-                alert("Successful")
                 setGuestName("")
+                setSuccess(true)
             } catch (err) {
+                //replace with mui component
                 alert(err)
             }
-            setOpen(false)
         }
     };
     return (
@@ -37,7 +40,7 @@ export const FormDialog = (props) => {
                 Book Now
             </Button>
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>{props.data.hotelName}</DialogTitle>
+                <DialogTitle>Book your room</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Please enter your full name.
@@ -49,12 +52,14 @@ export const FormDialog = (props) => {
                         type="text"
                         fullWidth
                         variant="standard"
-                        onChange={e=>setGuestName(e.target.value)}
+                        onChange={e => setGuestName(e.target.value)}
                     />
+                    <p>{success ? "Completed!" : ""}</p>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleBook}>Book</Button>
+                    <Button onClick={handleClose}>
+                        {success ? "Back" : "Cancel"}</Button>
+                    {success ? "" : <Button onClick={handleBook}>Book</Button>}
                 </DialogActions>
             </Dialog>
         </div>
